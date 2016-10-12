@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Html exposing (Html, text)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import String
@@ -22,101 +23,21 @@ main =
     let
         bigGrey =
             triangle 2
-                |> rotate (45 + 180)
+                |> rotate (90 + 45)
 
         bigBlue =
             triangle 2
-                |> rotate -45
+                |> rotate 45
 
         littleOrange =
             triangle 1
-                |> rotate (90 + 45)
-
-        littleBlue =
-            triangle (sqrt 2)
-                |> rotate -90
-                |> snap 3 (to greenParallelagram 4)
-
-        greenParallelagram =
-            parallelagram
-                |> rotate -45
-                |> snap 1 (to bigGrey 3)
-
-        greenSquare =
-            square
-                |> rotate 45
-
-        littleOrange2 =
-            triangle 1
-                |> rotate 45
-                |> snap 1 (to greenSquare 4)
+                |> rotate -(90 + 45)
     in
-        svg [ viewBox "-2 -2 10 10" ]
+        svg [ viewBox "-2 -2 6 6" ]
             [ bigGrey |> draw colors.grey
             , bigBlue |> draw colors.blue
             , littleOrange |> draw colors.orange
-            , greenParallelagram |> draw colors.green
-            , littleBlue |> draw colors.blue
-            , greenSquare |> draw colors.green
-            , littleOrange2 |> draw colors.orange
             ]
-
-
-to : List Point -> Int -> Point
-to pnts pointNumber =
-    pnts
-        |> List.drop (pointNumber - 1)
-        |> List.head
-        |> Maybe.withDefault ( 0, 0 )
-
-
-snap : Int -> Point -> List Point -> List Point
-snap pointNumber snapTarget pnts =
-    case
-        pnts
-            |> List.drop (pointNumber - 1)
-            |> List.head
-    of
-        Just pivot ->
-            pnts
-                |> sub pivot
-                |> add snapTarget
-
-        Nothing ->
-            pnts
-
-
-sub : Point -> List Point -> List Point
-sub ( x, y ) =
-    add ( -x, -y )
-
-
-add : Point -> List Point -> List Point
-add ( dx, dy ) pnts =
-    List.map (\( x, y ) -> ( x + dx, y + dy )) pnts
-
-
-rotate : Float -> List Point -> List Point
-rotate angle pnts =
-    let
-        rad =
-            degrees angle
-
-        rotate' ( x, y ) =
-            ( cos rad * x + sin rad * y
-            , sin rad * -x + cos rad * y
-            )
-    in
-        List.map rotate' pnts
-
-
-square : List Point
-square =
-    [ ( 0, 0 )
-    , ( 1, 0 )
-    , ( 1, 1 )
-    , ( 0, 1 )
-    ]
 
 
 triangle : Float -> List Point
@@ -127,13 +48,18 @@ triangle size =
     ]
 
 
-parallelagram : List Point
-parallelagram =
-    [ ( 0, 0 )
-    , ( 1, 0 )
-    , ( 2, -1 )
-    , ( 1, -1 )
-    ]
+rotate : Float -> List Point -> List Point
+rotate angle pnts =
+    let
+        rad =
+            degrees angle
+
+        rotate' ( x, y ) =
+            ( x * cos rad - y * sin rad
+            , x * sin rad + y * cos rad
+            )
+    in
+        List.map rotate' pnts
 
 
 draw : String -> List Point -> Svg msg
@@ -142,11 +68,9 @@ draw color pnts =
         [ pnts
             |> List.map (\( x, y ) -> [ x, y ])
             |> List.concat
-            |> List.map toString
+            |> List.map (\n -> toString n)
             |> String.join (",")
             |> points
         , fill color
-        , stroke "white"
-        , strokeWidth "0.1"
         ]
         []
