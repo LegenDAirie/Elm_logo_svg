@@ -1,3 +1,5 @@
+An awesome Elm logo made wth SVGs using Create Elm App
+----
 This project was bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).
 
 Below you will find some information on how to perform common tasks.  
