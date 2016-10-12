@@ -1,4 +1,5 @@
 An awesome Elm logo made wth SVGs using Create Elm App
+check it out- https://rawgit.com/yourSenchou/Elm_logo_svg/master/dist/index.html 
 ----
 This project was bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).
 
